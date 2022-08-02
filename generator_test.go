@@ -63,3 +63,14 @@ func TestNewWithEntropy(t *testing.T) {
 	log.Print(phrase)
 	log.Print(fl)
 }
+
+func BenchmarkNewWithEntropy(b *testing.B) {
+	total := 0
+
+	for i := 0; i < b.N; i++ {
+		pg.NewWithEntropy(opts)
+		total++
+	}
+
+	results = total
+}
