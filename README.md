@@ -54,8 +54,11 @@ a minimum of 25-30 bits of entropy for non-vital accounts and 60 bits
 or more for important accounts.
 
 **Formula Measuring Entropy**
-
-$$ H = M(WORD) * \log_2(1/M(WORD)) + M(SEP) * \log_2(1/M(SEP)) + M(NUMBER) * \log_2(1/M(NUMBER)) + M(SPEC_CHAR) * \log_2(1/M(SPEC_CHAR)) + M(LAST_WORD) * \log_2(1/M(LAST_WORD)) $$
+```math
+H = M(WORD) * \log_2(1/M(WORD)) + M(SEP) * \log_2(1/M(SEP))
++ M(NUMBER) * \log_2(1/M(NUMBER)) + M(SPEC_CHAR) *
+\log_2(1/M(SPEC_CHAR)) + M(LAST_WORD) * \log_2(1/M(LAST_WORD))
+```
 
 Entropy is calculated using the Shannon entropy formula, and measures the
 "unpredictability" of a password or passphrase. A higher entropy password
