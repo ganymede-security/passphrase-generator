@@ -5,6 +5,9 @@ import (
 	"math/rand"
 	"strings"
 	"time"
+
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 var (
@@ -38,11 +41,11 @@ type Options struct {
 }
 
 const (
-	lowerCharSet string = "abcdedfghijklmnopqrst"
- 	upperCharSet string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
- 	specialCharSet string = "!@#$%&*{}[]?<>"
- 	numberSet string = "0123456789"
-	allCharSet string = (lowerCharSet + upperCharSet + specialCharSet + numberSet)
+	lowerCharSet   string = "abcdedfghijklmnopqrst"
+	upperCharSet   string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	specialCharSet string = "!@#$%&*{}[]?<>"
+	numberSet      string = "0123456789"
+	allCharSet     string = (lowerCharSet + upperCharSet + specialCharSet + numberSet)
 )
 
 func New(opts Options) string {
@@ -52,8 +55,8 @@ func New(opts Options) string {
 }
 
 // NewFromMask generates random strings for all parts of a mask except the
-// words. 
-func new(w words, m mask, opts Options) (string) {
+// words.
+func new(w words, m mask, opts Options) string {
 	var builder strings.Builder
 	// ensures the index value of the words list stays constant
 	// with the mask index
@@ -61,7 +64,7 @@ func new(w words, m mask, opts Options) (string) {
 	lenNums := len(numberSet) - 1
 	lenSpecs := len(specialCharSet) - 1
 
-	for i:=0; i < len(m); {
+	for i := 0; i < len(m); {
 		switch m[i] {
 		case PG_NUMBER:
 			i++
@@ -90,11 +93,13 @@ func new(w words, m mask, opts Options) (string) {
 				log.Printf("pg_word: %v", err)
 				log.Fatal("Regular Word: ", length)
 			}
+
 			builder.WriteString(str)
 		case PG_LAST_WORD:
 			i++
 			length := int(w[keeper])
 			keeper++
+
 			str, err := getRandString(wordList, length)
 			if err != nil {
 				log.Printf("pg_last_word: %v\n", err)
@@ -103,12 +108,21 @@ func new(w words, m mask, opts Options) (string) {
 			builder.WriteString(str)
 		}
 	}
-	return builder.String()
+	// TODO: Find a way to force specific words to be uppercase
+	var end string
+
+	if opts.ChangeCase {
+		end = cases.Title(language.English, cases.Compact).String(builder.String())
+	} else {
+		end = builder.String()
+	}
+
+	return end
 }
 
 // ParseMask returns the word lengths as positive ints and negative
 // integers representing locations of separators
-func ParseMask(m mask, opts Options) (string) {
+func ParseMask(m mask, opts Options) string {
 	var builder strings.Builder
 	nums := 0
 	sC := 0
@@ -116,18 +130,18 @@ func ParseMask(m mask, opts Options) (string) {
 
 	for _, v := range m {
 		switch v {
-		case PG_NUMBER: 
-			n, err := getRandNum(0, len(numberSet) - 1)
+		case PG_NUMBER:
+			n, err := getRandNum(0, len(numberSet)-1)
 			if err != nil {
 				log.Print(err)
 			}
 			builder.WriteByte(numberSet[n])
-			nums++ 
+			nums++
 		case PG_SEPARATOR:
 			builder.WriteString(opts.Separator)
 			lengths = append(lengths, -(v))
 		case PG_SPEC_CHAR:
-			n, err := getRandNum(0, len(numberSet) - 1)
+			n, err := getRandNum(0, len(numberSet)-1)
 			if err != nil {
 				log.Print(err)
 			}
@@ -147,7 +161,7 @@ func ParseMask(m mask, opts Options) (string) {
 			} else {
 				log.Printf("unrecognized value: %v", v)
 			}
-		}	
+		}
 	}
 	return builder.String()
 }

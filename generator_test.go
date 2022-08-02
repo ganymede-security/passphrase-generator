@@ -1,6 +1,7 @@
 package passphrasegenerator_test
 
 import (
+	"log"
 	"testing"
 
 	pg "github.com/ganymede-security/passphrase-generator"
@@ -17,19 +18,21 @@ var (
 	}
 )
 
-var expectedLength = opts.PhraseLength - opts.Numbers - opts.SpecialChars
-
 var results int
 
 func TestNew(t *testing.T) {
 
-	for i := 0; i < 1000; i++ {
-		/*phrase := */ pg.New(opts)
+	var phrase string
 
+	for i := 0; i < 100000; i++ {
+		phrase = pg.New(opts)
+		if len(phrase) != opts.PhraseLength {
+			log.Printf("Failed with length: %d", len(phrase))
+			t.Fail()
+		}
 	}
 
-	//log.Print(phrase)
-
+	log.Print(phrase)
 }
 
 func BenchmarkNew(b *testing.B) {
