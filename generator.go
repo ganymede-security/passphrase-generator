@@ -2,9 +2,7 @@ package passphrasegenerator
 
 import (
 	"log"
-	"math/rand"
 	"strings"
-	"time"
 
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
@@ -48,10 +46,20 @@ const (
 	allCharSet     string = (lowerCharSet + upperCharSet + specialCharSet + numberSet)
 )
 
+// New returns a newly generated passphrase.
 func New(opts Options) string {
 	wds, msk := newPhrase(opts)
 	s := new(wds, msk, opts)
 	return s
+}
+
+// NewWithEntropy returns a new passphrase as well as a float32 containing
+// the total entropy of the generated phrase.
+func NewWithEntropy(opts Options) (string, float64) {
+wds, msk := newPhrase(opts)
+s := new(wds, msk, opts)
+entr := calculateEntropy(msk)
+return s, entr
 }
 
 // NewFromMask generates random strings for all parts of a mask except the
@@ -120,7 +128,8 @@ func new(w words, m mask, opts Options) string {
 	return end
 }
 
-// ParseMask returns the word lengths as positive ints and negative
+/*
+// parseMask returns the word lengths as positive ints and negative
 // integers representing locations of separators
 func ParseMask(m mask, opts Options) string {
 	var builder strings.Builder
@@ -170,3 +179,4 @@ func ParseMask(m mask, opts Options) string {
 func Init() {
 	rand.Seed(time.Now().UnixMicro())
 }
+*/

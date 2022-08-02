@@ -45,3 +45,21 @@ func BenchmarkNew(b *testing.B) {
 
 	results = total
 }
+
+func TestNewWithEntropy(t *testing.T) {
+
+	var phrase string
+	var fl float64
+
+	for i := 0; i < 100000; i++ {
+		phrase, fl = pg.NewWithEntropy(opts)
+
+		if len(phrase) != opts.PhraseLength {
+			log.Printf("Failed with length: %d", len(phrase))
+			t.Fail()
+		}
+	}
+
+	log.Print(phrase)
+	log.Print(fl)
+}

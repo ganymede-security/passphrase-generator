@@ -162,3 +162,13 @@ func TestNewPhrase(t *testing.T) {
 	log.Print(rw)
 	log.Print(rm)
 }
+
+func TestEntropy(t *testing.T) {
+	_, mask := newPhrase(opts)
+
+	sum := calculateEntropy(mask)
+
+	
+	log.Print(sum)
+	log.Print(mask)
+}

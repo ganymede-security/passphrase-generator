@@ -2,6 +2,7 @@ package passphrasegenerator
 
 import (
 	"log"
+	"math"
 )
 
 // The mask represents an array of bits representing a passphrase
@@ -146,4 +147,40 @@ func genMask(opts Options) (words, mask) {
 	shuffled := CryptoShuffle(phraseMask)
 
 	return wds, shuffled
+}
+
+// calculateEntropy calculates the total entropy of a generated passphrase
+// mask. Returns the calculated value as a float
+func calculateEntropy(m mask) float64 {
+	var sum float64
+
+	for i:= 0; i<len(m); i++ {
+
+		switch m[i] {
+		case PG_NUMBER:
+			totalNums := float64(10)
+
+			sum += math.Log2(totalNums)
+		case PG_SPEC_CHAR:
+			totalSpecs := float64(14)
+
+			sum += math.Log2(totalSpecs)
+		case PG_WORD:
+			totalWords := float64(9464) // Total words in the list
+
+			sum += math.Log2(totalWords)
+		case PG_LAST_WORD:
+			totalWords := float64(9464) // Total words in the list
+
+			sum += math.Log2(totalWords)
+		case PG_SEPARATOR:
+			//TODO: Test whether this makes sense
+			totalSeparators := float64(104)
+
+			sum += math.Log2(totalSeparators)
+		default:
+			continue
+		}
+	}
+	return sum
 }
