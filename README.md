@@ -42,6 +42,8 @@ Without any modifiers, the entropy of each word in the list is 13.2 bits,
 compared to the 12.9 bits in the Diceware word list.
 
 ### Calculating Entropy
+Calculating the entropy of a phrase is easy using just the phrase mask.
+
 Given a mask M:
 
 `M = [WORD][SEP][NUMBER][SPEC_CHAR][WORD][SEP][LAST_WORD]`
@@ -49,17 +51,14 @@ Given a mask M:
 We can measure the entropy of the passphrase using the formula below, with 
 H being the total Entropy. 
 
-A higher entropy number is better, it's recommended to use a password with
-a minimum of 25-30 bits of entropy for non-vital accounts and 60 bits
-or more for important accounts.
+**Shannon Entropy Formula**
 
-**Formula Measuring Entropy**
-```math
-H = M(WORD) * \log_2(1/M(WORD)) + M(SEP) * \log_2(1/M(SEP))
-+ M(NUMBER) * \log_2(1/M(NUMBER)) + M(SPEC_CHAR) *
-\log_2(1/M(SPEC_CHAR)) + M(LAST_WORD) * \log_2(1/M(LAST_WORD))
-```
+$$ H(x) = -\sum_{i=1}^n [P(x_i) * log_bP(x_i)] = \sum_{i=1}^n [P(x_i) * log_b(1 / P(x_i))] $$
 
 Entropy is calculated using the Shannon entropy formula, and measures the
 "unpredictability" of a password or passphrase. A higher entropy password
 offers additional protection from those that may try to crack a passphrase.
+
+A higher entropy is better, it's recommended to use a password with
+a minimum of 25-30 bits of entropy for non-vital accounts and 60 bits
+or more for important accounts.
