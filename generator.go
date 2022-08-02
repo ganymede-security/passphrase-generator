@@ -41,7 +41,7 @@ type Options struct {
 }
 
 const (
-	lowerCharSet   string = "abcdedfghijklmnopqrst"
+	lowerCharSet   string = "abcdedfghijklmnopqrstuvwxyz"
 	upperCharSet   string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	specialCharSet string = "!@#$%&*{}[]?<>"
 	numberSet      string = "0123456789"
