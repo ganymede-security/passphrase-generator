@@ -8,7 +8,7 @@ import (
 var (
 	opts = Options{
 		MaxWordLength: 15,
-		PhraseLength:  32,
+		PhraseLength:  60,
 		SpecialChars:  1,
 		Numbers:       1,
 		ChangeCase:    true,
