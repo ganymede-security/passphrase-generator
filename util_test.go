@@ -2,7 +2,6 @@
 
 package passphrasegenerator
 
-
 import (
 	"log"
 	"math/rand"
@@ -27,7 +26,7 @@ func TestProcessFile(t *testing.T) {
 func BenchmarkProcessFile(b *testing.B) {
 	total := 0
 
-	for i:= 0; i < b.N; i++ {
+	for i := 0; i < b.N; i++ {
 		str := processFile()
 		if str != nil {
 			total++
@@ -64,7 +63,7 @@ func BenchmarkGetRandString(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		str, _ := getRandString(words, 6) // key 6 has the most items to search through
 		mapped[str] = append(mapped[str], len(str))
-		total ++ 
+		total++
 	}
 
 	min := float32(2147483647)
@@ -91,17 +90,17 @@ func TestCryptoShuffle(t *testing.T) {
 	logResults := make(map[int]int32)
 
 	for k, v := range mask {
-		
+
 		logResults[k] = v
 	}
 
 	counter := int32(0)
 
-	for i:= 0; i < 100000; i++ {
+	for i := 0; i < 100000; i++ {
 		newMask = CryptoShuffle(mask)
 		for k, _ := range newMask {
 			counter++
-			logResults[k] =  counter
+			logResults[k] = counter
 		}
 	}
 
@@ -120,7 +119,7 @@ func TestCryptoShuffle(t *testing.T) {
 	log.Print(newMask)
 
 	log.Printf("Difference: %f\t", min/max)
-	
+
 }
 
 func BenchmarkCryptoShuffle(b *testing.B) {
@@ -134,7 +133,7 @@ func BenchmarkCryptoShuffle(b *testing.B) {
 		tracker[k] = append(tracker[k], v)
 	}
 
-	for i:= 0;i < b.N; i++ {
+	for i := 0; i < b.N; i++ {
 		arr := CryptoShuffle(mask)
 		for k, v := range arr {
 			tracker[k] = append(tracker[k], v)
@@ -148,7 +147,7 @@ func BenchmarkCryptoShuffle(b *testing.B) {
 		total += len(v)
 	}
 
-	log.Printf("Average: %d\n", (len(tracker)/total))
+	log.Printf("Average: %d\n", (len(tracker) / total))
 
 }
 
@@ -162,7 +161,7 @@ func BenchmarkCrypto(b *testing.B) {
 func BenchmarkIntn(b *testing.B) {
 	tracker := make(map[int][]int32)
 
-	for i :=0; i < b.N; i++ {
+	for i := 0; i < b.N; i++ {
 		n, _ := getRandNum(1, 15)
 		tracker[int(n)] = append(tracker[int(n)], int32(n))
 	}
@@ -175,3 +174,35 @@ func BenchmarkIntn(b *testing.B) {
 	}
 
 }
+
+
+
+func TestKnapsack(t *testing.T) {
+	//val := []int  {60, 100, 120}
+	wt := []int32 {10, 20, 30}
+	W := int32(50)
+	//n := len(val)
+
+	log.Print(isSubsetSum(wt, W))
+	
+}
+
+// func TestMemoize(t *testing.T) {
+// 	target := int32(opts.PhraseLength)
+
+// 	words, err := memoize(opts, target)
+// 	if err != nil {
+// 		t.Fatal(err)
+// 	}
+
+// 	log.Print(words)
+
+// 	targ := int32(0)
+
+// 	for _, v := range words {
+// 		targ += v
+// 	}
+
+// 	log.Print(targ)
+	
+// }

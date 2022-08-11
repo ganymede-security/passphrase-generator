@@ -128,3 +128,7 @@ func (s cSrc) Uint64() (v uint64) {
 	}
 	return v
 }
+
+func (opts Options) withoutModifiers() int32 {
+	return int32(opts.PhraseLength - opts.Numbers - opts.SpecialChars)
+}
