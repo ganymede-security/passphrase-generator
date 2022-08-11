@@ -12,10 +12,6 @@ var (
 	wordList = processFile()
 )
 
-type Generator struct {
-	Wordlist map[int]string
-}
-
 type Options struct {
 	// Specify the desired maximum length of any single word.
 	// Shorter words are easier to remember. Default word list
