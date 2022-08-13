@@ -95,24 +95,6 @@ func CryptoShuffle(arr []int32) []int32 {
 	return arr
 }
 
-// Helper function to count the number of trailing unset bits in
-// a negative int32
-func countTrailingBits(n int32) int32 {
-	count := int32(0)
-	for n != 0 {
-		n &= (n - 1)
-		count++
-	}
-	return 32 - count
-}
-
-func reverse(b int32) int32 {
-	b = (b&0xF0)>>4 | (b&0x0F)<<4
-	b = (b&0xCC)>>2 | (b&0x33)<<2
-	b = (b&0xAA)>>1 | (b&0x55)<<1
-	return b
-}
-
 type cSrc struct{}
 
 func (s cSrc) Seed(seed int64) {}
@@ -131,4 +113,12 @@ func (s cSrc) Uint64() (v uint64) {
 
 func (opts Options) withoutModifiers() int32 {
 	return int32(opts.PhraseLength - opts.Numbers - opts.SpecialChars)
+}
+
+ func sumArr(arr []int32) int32 {
+	var total int32
+	for _, v := range arr {
+		total += v
+	}
+	return total
 }
