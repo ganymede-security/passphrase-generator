@@ -54,6 +54,7 @@ func isSubsetSum(arr []int32, targetValue int32) bool {
 	return false
 }
 
+// Oracle for ssp
 func memoize(opts Options) ([]int32, error) {
 	arr := make([]int32, 0)
 	minWordLen := 3
@@ -79,53 +80,3 @@ func memoize(opts Options) ([]int32, error) {
 
 	return nil, err
 }
-
-// Naive algorithm for finding the subset of the array that adds to the target sum.
-// Algorithm is O(2^n * n) since there are 2^n subsets to check. Memory is O(n)
-// func inclusionExclusion(opts Options) /*(subset []int32, err error)*/ {
-// 	// Create a binary tree in which each level corresponds to an input number.
-// 	// left branch corresponds to inclusion and the right branch is for exclusion
-// 	arr, err := memoize(opts)
-// 	if err != nil {
-// 		return
-// 	}
-// 	tree := newNode(arr[0])
-// 	rl := int32(opts.PhraseLength - opts.Numbers - opts.SpecialChars)
-
-// 	// Fill the tree with values, values that are greater than the phrase length
-// 	// length are input on the left node.
-// 	for _, v := range arr {
-// 		for j:= 0; j > len(arr); j++ {
-// 		switch {
-// 		case v + tree.value == rl:
-// 			tree.right = newNode(v)
-// 			rl -= v
-// 		case v + tree.value > rl:
-// 			tree.left = newNode(v)
-// 		case v + tree.value < rl:
-// 			rl -= v
-// 			tree.right = newNode(v)
-// 			}
-// 		}
-// 	}
-// 	//ret := make([]int32, len(arr))
-
-// }
-
-/*
-set[]={3, 4, 5, 2}
-target=6
-
-0    1    2    3    4    5    6
-
-0   T    F    F    F    F    F    F
-
-3   T    F    F    T    F    F    F
-
-4   T    F    F    T    T    F    F
-
-5   T    F    F    T    T    T    F
-
-2   T    F    T    T    T    T    T
-
-*/
