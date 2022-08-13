@@ -6,55 +6,54 @@ import (
 )
 
 func TestPowerSet(t *testing.T) {
-	arr, _ := memoize(opts)
-	//arr := []int32 { 5, 10, 15 }
-
-	log.Print("Arr: ", arr)
-	//log.Print("Target: ", opts.withoutModifiers())
-
-	subset := powerSet(arr)
-	total := int32(0)
-
-	for _, v := range subset {
-		if sumArr(v) == opts.withoutModifiers() {
-			log.Print("Success", v)
-			for _, v := range v {
-				total = total + v
+	for i:=0; i < 10000; i++ {
+		arr, _ := memoize(opts)
+		target := opts.withoutModifiers()
+	
+		log.Print("Arr: ", arr)
+	
+		subset := powerSet(arr, target)
+	
+		for _, v := range subset {
+			total := int32(0)
+			if sumArr(v) == opts.withoutModifiers() {
+				log.Print("Success", v)
+				for _, v := range v {
+					total = total + v
+				}
+				log.Print("Total ", total)
 			}
-			log.Print("Total ", total)
 		}
 	}
-
-	//log.Print(subset)
 }
 
 
 func TestSubSetSum(t *testing.T) {
-	arr, _ := memoize(opts)
-
-	subset, sum, err := SubSetSum(arr, opts)
-	if err != nil {
-		log.Print("Error: ", err)
-		t.Fail()
-	} else if sum != opts.withoutModifiers() {
-		t.Fail()
-		log.Print("Incorrect Sum reached: ", sum)
-		log.Print("Expected: ", opts.withoutModifiers())
-	} else {
-		log.Print("Success: ", subset, sum) 
+	for i:=0; i < 10000; i++ {
+		arr, _ := memoize(opts)
+		target := opts.withoutModifiers()
+	
+		subset, err := SubSetSum(arr, target)
+		if err != nil {
+			log.Print("Error: ", err)
+			t.Fail()
+		} else if sumArr(subset) != target {
+			t.Fail()
+			log.Print("Incorrect Sum reached: ", sumArr(subset))
+			log.Print("Expected: ", target)
+			log.Print("Success: ", subset, sumArr(subset)) 
+		}
 	}
 }
 
 func BenchmarkSubSetSum(b *testing.B) {
-	for i:= 0; i < b.N; i++ {
-		arr, _ := memoize(opts)
+	target := opts.withoutModifiers()
+	arr, _ := memoize(opts)
 
-		subset, sum, err := SubSetSum(arr, opts)
+	for i:= 0; i < b.N; i++ {
+		subset, err := SubSetSum(arr, target)
 		if err != nil {
 			log.Print("Error: ", err)
-		} else if sum != opts.withoutModifiers() {
-			log.Print("Incorrect Sum reached: ", sum)
-			log.Print("Expected: ", opts.withoutModifiers())
 			log.Print("Subset: ", subset)
 		}
 	}
