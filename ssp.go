@@ -4,13 +4,16 @@ import (
 	"fmt"
 )
 
-func combinations(L []int32, r int32) [][]int32 {
+func combinations(L []int32, r int32, target int32) [][]int32 {
 	if r == 1 {
 		temp := make([][]int32, 0)
+		count := int32(0)
 		for _, rr := range L {
-			t := make([]int32, 0)
-			t = append(t, rr)
-			temp = append(temp, [][]int32{t}...)
+			if rr + count < target {
+				t := make([]int32, 0)
+				t = append(t, rr)
+				temp = append(temp, [][]int32{t}...)
+			}
 		}
 		return temp
 	} else {
@@ -18,35 +21,35 @@ func combinations(L []int32, r int32) [][]int32 {
 		for i := 0; i < len(L); i++ {
 			perms := make([]int32, 0)
 			perms = append(perms, L[:i]...)
-			for _, x := range combinations(perms, r-1) {
+			for _, x := range combinations(perms, r-1, target) {
+				count := int32(0)
+				if L[i] + count < target {
 				t := append(x, L[i])
 				res = append(res, [][]int32{t}...)
+				}
 			}
 		}
 		return res
 	}
 }
 
-func powerSet(L []int32) [][]int32 {
+func powerSet(L []int32, target int32) [][]int32 {
 	res := make([][]int32, len(L))
+
 	for i := int32(0); i <= int32(len(L)); i++ {
-		x := combinations(L, i)
+		x := combinations(L, i, target)
 		res = append(res, x...)
 	}
 	return res
 }
 
-func SubSetSum(set []int32, opts Options) (subset []int32, sum int32, err error) {
-	allSets := powerSet(set)
+func SubSetSum(set []int32, target int32) (subset []int32, err error) {
+	allSets := powerSet(set, target)
 	for _, v := range allSets {
-		if sumArr(v) == opts.withoutModifiers() {
-			var total int32
-			for _, v := range v {
-				total = total + v
-			}
-			return v, total, nil
+		if sumArr(v) == target {
+			return v, nil
 		}
 	}
 	err = fmt.Errorf("ssp: Error finding subset that equals given sum")
-	return nil, 0, err
+	return nil, err
 }
