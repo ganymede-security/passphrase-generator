@@ -90,7 +90,7 @@ func genWords(opts Options) (w words, err error) {
 	for i := int32(0); i != rl; {
 		var rn int32 = 0
 		for rn < 1 {
-			rn, _ = getRandNum(len(opts.Separator)+2, opts.MaxWordLength - 1)
+			rn, _ = getRandNum(4, opts.MaxWordLength - 1)
 		}
 		if rn+i > rl {
 			lw = rl - i

@@ -8,7 +8,7 @@ import (
 var (
 	opts = Options{
 		MaxWordLength: 15,
-		PhraseLength:  60,
+		PhraseLength:  32,
 		SpecialChars:  1,
 		Numbers:       1,
 		ChangeCase:    true,
@@ -171,4 +171,28 @@ func TestEntropy(t *testing.T) {
 	
 	log.Print(sum)
 	log.Print(mask)
+}
+
+func BenchmarkNewPhrase(b *testing.B) {
+
+	total := 0
+
+	for i:= 0; i < b.N; i++ {
+		words, _ := genWords(opts)
+		if words != nil {
+			total++
+		}
+	}
+	result = total
+}
+
+func TestNew(t *testing.T) {
+	
+	words := []int32{9, 5, 11, 5}
+	mask := []int32{8, 4, 1, 8, 4, 8, 4, 2, 16}
+
+	phrase := new(words, mask, opts)
+
+	log.Print(phrase)
+
 }
