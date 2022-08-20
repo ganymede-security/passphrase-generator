@@ -1,14 +1,16 @@
 # Phrase Generator
 
 This package implements a high entropy, performant passphrase
-generator in Go. It uses a mask to represent the type of item that is 
-included, whether a word, special character, or any other modifier. 
+generator in Go utilizing the Ganymede algorithm. It uses a 
+phrase "mask" to represent the type of symbol that is included, 
+whether a word, special character, or any other modifier. 
 
 ## Driving Principles
 The goal is to create a phrase generator that creates phrases with as 
 much or more entropy than a Diceware generated phrase, along with 
-additional configurability and customizability and the ability to 
-calculate the strength of a generated phrase in real time.
+additional configurability and customizability. The Ganymede algorithm
+also includes the ability to calculate the strength of a generated 
+phrase in real time.
 
 Kerckhoff's Principle holds that even if all parts of a system are known, 
 a secure system should still be secure. Anything less is Security through
