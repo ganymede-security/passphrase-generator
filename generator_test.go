@@ -23,16 +23,21 @@ var results int
 func TestNew(t *testing.T) {
 
 	var phrase string
+	var err error
 
-	for i := 0; i < 100000; i++ {
-		phrase = pg.New(opts)
+	for i := 0; i < 10000; i++ {
+		phrase, err = pg.New(opts)
+		if err != nil {
+			t.Fatal(err)
+		}
+
 		if len(phrase) != opts.PhraseLength {
 			log.Printf("Failed with length: %d", len(phrase))
 			t.Fail()
 		}
 	}
-
 	log.Print(phrase)
+
 }
 
 func BenchmarkNew(b *testing.B) {

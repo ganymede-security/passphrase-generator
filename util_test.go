@@ -40,7 +40,7 @@ func TestGetRandString(t *testing.T) {
 	words := processFile()
 
 	// i starts at 2 because there are no strings with a length of 1
-	for i := 2; i < len(words); i++ {
+	for i := 4; i < len(words)+4; i++ {
 		st, err := getRandString(words, i)
 		if err != nil {
 			t.Fatalf("%v", err)
