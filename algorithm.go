@@ -3,6 +3,7 @@ package passphrasegenerator
 import (
 	"log"
 	"math"
+
 )
 
 // The mask represents an array of bits representing a passphrase
@@ -13,7 +14,7 @@ type mask []int32
 // Phrase modifiers
 const (
 	PG_SPEC_CHAR int32 = 1 << iota
-	
+
 	PG_NUMBER
 
 	PG_SEPARATOR
@@ -25,8 +26,8 @@ const (
 	PG_WORD_LENGTH
 )
 
-// Words are an array of ints representing the lengths of each string 
-// that will be used in the phrase. 
+// Words are an array of ints representing the lengths of each string
+// that will be used in the phrase.
 type words []int32
 
 // NewPhrase returns a shuffled list of words and a mask ready for
@@ -35,8 +36,8 @@ func newPhrase(opts Options) (words, mask) {
 	ws := make([]int32, 0)
 	w, m := genMask(opts)
 	_, rm := addSeparators(w, m, opts)
-	for i:= 0; i < len(w)-1; i++ {
-		ws = append(ws, w[i] - 1)
+	for i := 0; i < len(w)-1; i++ {
+		ws = append(ws, w[i]-1)
 	}
 	ws = append(ws, w[len(w)-1])
 	return ws, rm
@@ -46,19 +47,19 @@ func newPhrase(opts Options) (words, mask) {
 // does not count towards the total length. However, the lengths and number
 // of words must be known before separators can be added
 func addSeparators(w words, m mask, opts Options) (words, mask) {
-	last := w[len(w) - 1]
+	last := w[len(w)-1]
 	rt := make([]int32, 0)
 	rtm := make([]int32, 0)
 	sep := int32(len(opts.Separator))
 
-	for i:=0; i < len(w) - 1; i++ {
-		rt = append(rt, w[i] - sep)
+	for i := 0; i < len(w)-1; i++ {
+		rt = append(rt, w[i]-sep)
 		rt = append(rt, sep)
 	}
 
 	rt = append(rt, last)
 
-	for i:=0; i < len(m); i++ {
+	for i := 0; i < len(m); i++ {
 		switch m[i] {
 		case PG_NUMBER:
 			rtm = append(rtm, PG_NUMBER)
@@ -89,26 +90,19 @@ func genWords(opts Options) (w words, err error) {
 
 	for i := int32(0); i != rl; {
 		var rn int32 = 0
-		for rn < 1 {
-			rn, _ = getRandNum(4, opts.MaxWordLength - 1)
+		rn, err = getRandNum(4, opts.MaxWordLength-1)
+		if err != nil {
+			return nil, err
 		}
+
 		if rn+i > rl {
 			lw = rl - i
-			for lw == 0 || lw == 1 {
-				_, words = words[len(words)-1], words[:len(words)-1]
-				nlw := int32(0)
-				for _, v := range words {
-					if v > 0 {
-						nlw += v
-					} else {
-						nlw += (-v)
-					}
-				}
-				i = nlw
-				lw = rl - i
+			if lw >= int32(opts.MaxWordLength) || lw < 4 {
+				return genWords(opts)
+			} else {
+				words = append(words, lw)
+				i += lw
 			}
-			words = append(words, lw)
-			i += lw
 		} else {
 			words = append(words, rn)
 			i += rn
@@ -118,7 +112,7 @@ func genWords(opts Options) (w words, err error) {
 }
 
 // genMask creates a phrase mask representing the different types of items
-// a phrase will need to generate.  
+// a phrase will need to generate.
 func genMask(opts Options) (words, mask) {
 	n := opts.Numbers
 	sC := opts.SpecialChars
@@ -138,7 +132,7 @@ func genMask(opts Options) (words, mask) {
 		log.Print(err)
 	}
 
-	for i := 0; i < len(wds) - 1; i++ {
+	for i := 0; i < len(wds)-1; i++ {
 		phraseMask = append(phraseMask, PG_WORD)
 	}
 	// Append last word
