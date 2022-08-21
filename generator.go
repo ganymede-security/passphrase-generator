@@ -1,6 +1,7 @@
 package passphrasegenerator
 
 import (
+	"fmt"
 	"log"
 	"strings"
 
@@ -9,7 +10,8 @@ import (
 )
 
 var (
-	wordList = processFile()
+	//wordList = processFile()
+	wordList = newWordMap
 )
 
 type Options struct {
@@ -43,19 +45,22 @@ const (
 )
 
 // New returns a newly generated passphrase.
-func New(opts Options) string {
+func New(opts Options) (string, error) {
+	if opts.withoutModifiers() < 4 {
+		return "", fmt.Errorf("generator: invalid options. Phrase modifiers and word length incompatible")
+	}
 	wds, msk := newPhrase(opts)
 	s := new(wds, msk, opts)
-	return s
+	return s, nil
 }
 
 // NewWithEntropy returns a new passphrase as well as a float32 containing
 // the total entropy of the generated phrase.
 func NewWithEntropy(opts Options) (string, float64) {
-wds, msk := newPhrase(opts)
-s := new(wds, msk, opts)
-entr := calculateEntropy(msk)
-return s, entr
+	wds, msk := newPhrase(opts)
+	s := new(wds, msk, opts)
+	entr := calculateEntropy(msk)
+	return s, entr
 }
 
 // NewFromMask generates random strings for all parts of a mask except the
@@ -107,7 +112,7 @@ func new(w words, m mask, opts Options) string {
 			str, err := getRandString(wordList, length)
 			if err != nil {
 				log.Printf("pg_last_word: %v\n", err)
-				log.Fatal(length, keeper)
+				log.Fatalf("Failed with length: %d\tAt Index: %d\n", length, keeper)
 			}
 			builder.WriteString(str)
 		}
@@ -123,56 +128,3 @@ func new(w words, m mask, opts Options) string {
 
 	return end
 }
-
-/*
-// parseMask returns the word lengths as positive ints and negative
-// integers representing locations of separators
-func ParseMask(m mask, opts Options) string {
-	var builder strings.Builder
-	nums := 0
-	sC := 0
-	var lengths []int32
-
-	for _, v := range m {
-		switch v {
-		case PG_NUMBER:
-			n, err := getRandNum(0, len(numberSet)-1)
-			if err != nil {
-				log.Print(err)
-			}
-			builder.WriteByte(numberSet[n])
-			nums++
-		case PG_SEPARATOR:
-			builder.WriteString(opts.Separator)
-			lengths = append(lengths, -(v))
-		case PG_SPEC_CHAR:
-			n, err := getRandNum(0, len(numberSet)-1)
-			if err != nil {
-				log.Print(err)
-			}
-			builder.WriteByte(specialCharSet[n])
-			sC++
-		default:
-			if v < 0 {
-				lengths = append(lengths, countTrailingBits(v))
-
-				size := countTrailingBits(v)
-
-				string, err := getRandString(wordList, int(size))
-				if err != nil {
-					log.Print(err)
-				}
-				builder.WriteString(string)
-			} else {
-				log.Printf("unrecognized value: %v", v)
-			}
-		}
-	}
-	return builder.String()
-}
-
-// On init seed the random number generator
-func Init() {
-	rand.Seed(time.Now().UnixMicro())
-}
-*/
