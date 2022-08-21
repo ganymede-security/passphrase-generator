@@ -21,7 +21,7 @@ var expectedLength int32 = int32(opts.PhraseLength - opts.Numbers - opts.Special
 func TestGenWords(t *testing.T) {
 	var wrds words
 	var err error
-	for i:=0; i<10000;i++ {
+	for i:=0; i<1000000;i++ {
 		wrds, err = genWords(opts)
 		if err != nil {
 			t.Fail()
@@ -29,8 +29,8 @@ func TestGenWords(t *testing.T) {
 		}
 		for i := 0; i < len(wrds); i++ {
 			if int(wrds[i]) > opts.MaxWordLength {
-				t.Fail()
 				log.Print(wrds)
+				t.Fatal()
 			}
 		}
 	}
@@ -43,6 +43,10 @@ func TestGenWords(t *testing.T) {
 		if int(wrds[i]) > opts.MaxWordLength {
 			t.Fail()
 			log.Print(wrds)
+		}
+		if int(wrds[i]) < 4 {
+			log.Print(wrds)
+			t.Fatal()
 		}
 	}
 
