@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	FILE_NAME = "./words.txt"
+	FILE_NAME = "./newwords.txt"
 )
 
 // ProcessFile is a helper function to read a word file, returning
