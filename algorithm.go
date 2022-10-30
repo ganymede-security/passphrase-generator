@@ -3,7 +3,6 @@ package passphrasegenerator
 import (
 	"log"
 	"math"
-
 )
 
 // The mask represents an array of bits representing a passphrase
@@ -80,7 +79,7 @@ func addSeparators(w words, m mask, opts Options) (words, mask) {
 	return rt, rtm
 }
 
-// GetNumSizes returns an array containing the lengths of each word in the phrase.
+// genWords returns an array containing the lengths of each word in the phrase.
 // Requires an input of the desired total phrase length, and desired numbers of
 // special characters, numbers, and whether the case should be changed
 func genWords(opts Options) (w words, err error) {
@@ -147,31 +146,27 @@ func genMask(opts Options) (words, mask) {
 // mask. Returns the calculated value as a float
 func calculateEntropy(m mask) float64 {
 	var sum float64
+	// 10 is the total number of number 'symbols' available	
+	logNums := math.Log2(float64(10))
+	// 14 is the total number of 'special characters'
+	logSpecs := math.Log2(float64(14))
+	// Total words in the list
+	logWords := math.Log2(float64(14528))
+	//TODO: Test whether this makes sense
+	logSeps := math.Log2(float64(104))
 
 	for i:= 0; i<len(m); i++ {
-
 		switch m[i] {
 		case PG_NUMBER:
-			totalNums := float64(10)
-
-			sum += math.Log2(totalNums)
+			sum += logNums
 		case PG_SPEC_CHAR:
-			totalSpecs := float64(14)
-
-			sum += math.Log2(totalSpecs)
+			sum += logSpecs
 		case PG_WORD:
-			totalWords := float64(9464) // Total words in the list
-
-			sum += math.Log2(totalWords)
+			sum += logWords
 		case PG_LAST_WORD:
-			totalWords := float64(9464) // Total words in the list
-
-			sum += math.Log2(totalWords)
+			sum += logWords
 		case PG_SEPARATOR:
-			//TODO: Test whether this makes sense
-			totalSeparators := float64(104)
-
-			sum += math.Log2(totalSeparators)
+			sum += logSeps
 		default:
 			continue
 		}
