@@ -60,7 +60,7 @@ func NewWithEntropy(opts Options) (string, float64) {
 	wds, msk := newPhrase(opts)
 	s := new(wds, msk, opts)
 	entr := calculateEntropy(msk)
-	return s, entr
+	return s, entr  
 }
 
 // NewFromMask generates random strings for all parts of a mask except the
